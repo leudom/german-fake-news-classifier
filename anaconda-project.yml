@@ -28,9 +28,9 @@ commands:
   DownloadData:
     unix: python3 src/data/download_data.py
     env_spec: fake_news_env
-    
+
   ScrapeNews:
-    unix: python3 src/data/news_scraper.py
+    unix: python3 src/data/scrape_news.py
     env_spec: fake_news_env
 
   EDAKaggleDataset:
@@ -74,6 +74,7 @@ packages:
 - kaggle
 - python-dotenv
 - seaborn
+- catboost
 #
 # In the channels section, list any Conda channel URLs to be searched
 # for packages.
