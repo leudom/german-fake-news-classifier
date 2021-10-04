@@ -24,13 +24,25 @@ description: This is a fake news classifier trained on german news/fake-news.
 # In the commands section, list your runnable scripts, notebooks, and other code.
 # Use `anaconda-project add-command` to add commands.
 #
-commands: {}
+commands:
+  DownloadData:
+    unix: python3 src/data/download_data.py
+    env_spec: fake_news_env
+    
+  ScrapeNews:
+    unix: python3 src/data/news_scraper.py
+    env_spec: fake_news_env
 
+  EDAKaggleDataset:
+    notebook: notebooks/01-eda-german-fake-news.ipynb
+    env_spec: fake_news_env
 #
 # In the variables section, list any environment variables your code depends on.
 # Use `anaconda-project add-variable` to add variables.
 #
-variables: {}
+variables:
+  KAGGLE_USERNAME:
+  KAGGLE_KEY:
 
 #
 # In the services section, list any services that should be
@@ -56,6 +68,12 @@ packages:
 
 - pandas
 - newspaper3k
+- scikit-learn
+- nltk
+- jupyter
+- kaggle
+- python-dotenv
+- seaborn
 #
 # In the channels section, list any Conda channel URLs to be searched
 # for packages.
