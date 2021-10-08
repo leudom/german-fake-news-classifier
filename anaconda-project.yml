@@ -84,6 +84,7 @@ packages:
 # channels:
 #    - mychannel
 #
+- dvc
 channels: []
 
 #
