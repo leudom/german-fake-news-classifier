@@ -40,9 +40,7 @@ commands:
 # In the variables section, list any environment variables your code depends on.
 # Use `anaconda-project add-variable` to add variables.
 #
-variables:
-  KAGGLE_USERNAME:
-  KAGGLE_KEY:
+variables: {}
 
 #
 # In the services section, list any services that should be
@@ -75,6 +73,8 @@ packages:
 - python-dotenv
 - seaborn
 - catboost
+- pip:
+  - dagshub
 #
 # In the channels section, list any Conda channel URLs to be searched
 # for packages.

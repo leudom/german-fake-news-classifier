@@ -1,94 +1,109 @@
 # -*- coding: utf-8 -*-
+
+"""FakeNewsClassifier Trainer
+
+This script conduct the following steps (overview):
+
+1. Load the processes dataset from {PROJECT_DIR}/data/processed as dataframe
+2. Concatenate title and text in one column
+3. Split the dataset into train and test
+
+4. Set up a sklearn pipeline with preprocessor and classifier for the combined column (title+text)
+   and perform hyperparam search 
+5. Extract best score and best_params for and log it
+6. Predict on testset and log the score
+
+7. Pickle best pipe to disk (final model)
+
+"""
 # %%
 import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+
 import os
 import pandas as pd
 from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import VotingClassifier
 from catboost import CatBoostClassifier, Pool
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report, confusion_matrix, f1_score, recall_score, precision_score
 from dotenv import find_dotenv, load_dotenv
+import nltk
+from nltk.stem.snowball import GermanStemmer
+from sklearn.feature_extraction.text import CountVectorizer
+from custom_transformers import StemmedCountVectorizer
+
 
 load_dotenv(find_dotenv())
-
-import nltk
-#%%
+#%% Load and split dataset
 INPUTFILE = os.path.join(os.getenv('PROJECT_DIR'), 'data', 'processed', 'fake_news_processed.csv')
-
 df = pd.read_csv(INPUTFILE, sep=';')
-# %%
-df.fake.value_counts(normalize=True)
-#%%
-X = df['title']
+logger.info('Distribution of fake news in entire dataset: \n%s' % df.fake.value_counts(normalize=True))
+
+X = df['title']+' '+df['text']
 y = df['fake']
-#%%
+
 X_train, X_test, y_train, y_test = train_test_split(X, y,
                     test_size=0.2,
                     stratify=y,
                     random_state=42)
 
-#%%
-train_pool = Pool(X_train, y_train,
-                  text_features=['text', 'title'],
-                  feature_names=list(X_train)
-                  )
-valid_pool = Pool(X_test, y_test,
-                  text_features=['text', 'title'],
-                  feature_names=list(X_train)
-                  )
-# %%
-cbc = CatBoostClassifier(iterations=100,
-        learning_rate=0.8,
-        eval_metric='Precision',
-        use_best_model=True)
-# %%
-cbc.fit(train_pool, eval_set=valid_pool)
-
-
-# %% Sklearn preprocessing with nltk, CountVectorizer
+# Download and init stopwordlist
 nltk.download('stopwords')
-stopword_list = nltk.corpus.stopwords.words('german')
-stemmer = nltk.stem.snowball.GermanStemmer(ignore_stopwords=True)
+STOPWORD_LIST = nltk.corpus.stopwords.words('german')
 
-# %%
-class StemmedCountVectorizer(CountVectorizer):
-    def __init__(self, stemmer, **kwargs):
-        super(StemmedCountVectorizer, self).__init__(**kwargs)
-        self.stemmer = stemmer
+#print(X_train[100])
 
-    def build_analyzer(self):
-        analyzer = super(StemmedCountVectorizer, self).build_analyzer()
-        return lambda doc: (self.stemmer.stem(w) for w in analyzer(doc))
-#%%
-StemmedCountVectorizer(stemmer)
-# %%
-count_vec_body = CountVectorizer(token_pattern=r'\b[a-zA-Z]{2,}\b',
-                                  max_features=100)
-                                  #ngram_range=(2,2)
-                                #)
+# %% Test with CountVectorizer
+"""
+count_vec = StemmedCountVectorizer(token_pattern=r'\b[a-zA-Z]{2,}\b',
+                                max_features=100,
+                                stop_words=STOPWORD_LIST,
+                                lowercase=True,
+                                stemmer=GermanStemmer(ignore_stopwords=True),
+                                ngram_range=(2,2)
+                        )
 
-count_vec_body.fit(X_train)
-word_counts_in_body = count_vec_body.transform(X_train).todense()
-# %%
-df_body = pd.DataFrame(word_counts_in_body, columns=count_vec_body.get_feature_names())
+word_counts = count_vec.fit_transform(X_train).todense()
+
+df_body = pd.DataFrame(word_counts, columns=count_vec.get_feature_names())
 df_body_trans = pd.DataFrame(df_body.T.sum(axis=1), columns=['count'])
 df_body_trans.sort_values(by='count', ascending=False).head(20)
-# %%
+
+"""
+#%% Define param grid for tuning
+param_grid = {'vectorizer__max_features':[300, 500],
+        'clf__n_estimators': [300, 400],
+        'clf__learning_rate': [0.8],
+        'clf__max_depth': [5]}
+
+# Constants for training
+CV_SCORING = 'f1'
+CV_FOLDS = 3
+# %% Pipeline
 pipe = Pipeline(steps=[
-        ('vectorizer', StemmedCountVectorizer(stop_words=stopword_list,
-                                  token_pattern=r'\b[a-zA-Z]{2,}\b',
-                                  max_features=300,
-                                  stemmer=stemmer)),
-        ('clf', CatBoostClassifier(iterations=100,
-                                learning_rate=0.1))
+    ('vectorizer', StemmedCountVectorizer(stop_words=STOPWORD_LIST,
+                                   token_pattern=r'\b[a-zA-Z]{2,}\b',
+                                   stemmer=GermanStemmer(ignore_stopwords=True),
+                                   lowercase=True)),
+    ('clf', CatBoostClassifier())
 ])
-
-# %%
-
-pipe.fit(X_train, y_train)
-# %%
-pred = pipe.predict(X_test)
-# %%
-print(classification_report(y_test, pred))
-# %%
+# pipe_title_tune.get_params().keys()
+cv_grid = GridSearchCV(pipe, param_grid, scoring=CV_SCORING, cv=CV_FOLDS, n_jobs=2)
+cv_grid.fit(X_train, y_train)
+#grid_title.best_estimator_.named_steps['clf'].get_all_params()
+#%% Log and assign best score and params to var
+logger.info('Best params from GridSearchCV: %s' % str(cv_grid.best_params_))
+logger.info('Best %s from GridSearchCV: %s' % (CV_SCORING, str(cv_grid.best_score_)))
+#_best_params_title = grid_title.best_params_
+#_best_score_title = grid_title.best_score_
+# %% Predict on testdata
+y_pred = cv_grid.best_estimator_.predict(X_test)
+logger.info('f1_score for testdata: %s' % str(f1_score(y_test, y_pred)))
+logger.info('precision_score for testdata: %s' % str(precision_score(y_test, y_pred)))
+logger.info('recall_score for testdata: %s' % str(recall_score(y_test, y_pred)))
+logger.info('Classification report for testdata: \n%s' % classification_report(y_test, y_pred))
+logger.info('Confusion matrix for testdata: \n%s' % confusion_matrix(y_test, y_pred))
+#%%
