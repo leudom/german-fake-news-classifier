@@ -4,8 +4,8 @@ stages:
     cmd: python3 src/data/download_data.py
     deps:
     - path: src/data/download_data.py
-      md5: ba74ef3dfb170b4500b288747247f4c7
-      size: 1053
+      md5: e20d4b4173871c57a9bb797ed576de79
+      size: 1065
     outs:
     - path: data/raw/GermanFakeNC.json
       md5: e43b53e67d7aa42ef20c65a5f8f3487b
@@ -27,7 +27,7 @@ stages:
       md5: b882aadb2fe4d01a65d9c2eced819887
       size: 997668
   make-dataset:
-    cmd: '" python3" src/data/scrape_news.py'
+    cmd: python3 src/data/make_dataset.py
     deps:
     - path: data/interim/GermanFakeNC_interim.csv
       md5: b882aadb2fe4d01a65d9c2eced819887

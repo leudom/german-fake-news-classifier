@@ -1,0 +1,23 @@
+stages:
+  download-data:
+    cmd: python3 src/data/download_data.py
+    deps:
+    - src/data/download_data.py
+    outs:
+    - data/raw/GermanFakeNC.json
+    - data/raw/news.csv
+  scrape-news:
+    cmd: python3 src/data/scrape_news.py
+    deps:
+    - data/raw/GermanFakeNC.json
+    - src/data/scrape_news.py
+    outs:
+    - data/interim/GermanFakeNC_interim.csv
+  make-dataset:
+    cmd: python3 src/data/make_dataset.py
+    deps:
+    - data/interim/GermanFakeNC_interim.csv
+    - data/raw/news.csv
+    - src/data/make_dataset.py
+    outs:
+    - data/processed/fake_news_processed.csv

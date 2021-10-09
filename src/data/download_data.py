@@ -11,7 +11,7 @@ subprocess.call(['kaggle', 'datasets', 'download',
                  '-p', './data/raw'])
                  
 # Unzip dataset              
-subprocess.call(['unzip', './data/raw/fake-news-dataset-german.zip',
+subprocess.call(['unzip', '-o', './data/raw/fake-news-dataset-german.zip',
                  '-d', './data/raw'])
 
 # Cleanup zip
@@ -25,7 +25,7 @@ subprocess.call(['wget', '-P', './data/raw',
                  'https://zenodo.org/record/3375714/files/GermanFakeNC.zip'])
 
 # Unzip dataset
-subprocess.call(['unzip', './data/raw/GermanFakeNC.zip',
+subprocess.call(['unzip', '-o', './data/raw/GermanFakeNC.zip',
                  '-d', './data/raw'])
 
 # Cleanup zip
