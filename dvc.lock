@@ -1,0 +1,44 @@
+schema: '2.0'
+stages:
+  download-data:
+    cmd: python3 src/data/download_data.py
+    deps:
+    - path: src/data/download_data.py
+      md5: e20d4b4173871c57a9bb797ed576de79
+      size: 1065
+    outs:
+    - path: data/raw/GermanFakeNC.json
+      md5: e43b53e67d7aa42ef20c65a5f8f3487b
+      size: 245288
+    - path: data/raw/news.csv
+      md5: ec0f93f0100c7ef339b90a43d38e7707
+      size: 174237889
+  scrape-news:
+    cmd: python3 src/data/scrape_news.py
+    deps:
+    - path: data/raw/GermanFakeNC.json
+      md5: e43b53e67d7aa42ef20c65a5f8f3487b
+      size: 245288
+    - path: src/data/scrape_news.py
+      md5: 8d2f58b441af6a447bd7d4e0bf21a958
+      size: 2368
+    outs:
+    - path: data/interim/GermanFakeNC_interim.csv
+      md5: b882aadb2fe4d01a65d9c2eced819887
+      size: 997668
+  make-dataset:
+    cmd: '" python3" src/data/scrape_news.py'
+    deps:
+    - path: data/interim/GermanFakeNC_interim.csv
+      md5: b882aadb2fe4d01a65d9c2eced819887
+      size: 997668
+    - path: data/raw/news.csv
+      md5: ec0f93f0100c7ef339b90a43d38e7707
+      size: 174237889
+    - path: src/data/make_dataset.py
+      md5: ba215c3749f07b31d6b64d0f6b7ee6e6
+      size: 5489
+    outs:
+    - path: data/processed/fake_news_processed.csv
+      md5: f64b274e898e5f9417abda415aa505ad
+      size: 170221793
