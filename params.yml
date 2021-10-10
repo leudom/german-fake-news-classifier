@@ -1,0 +1,7 @@
+best_cv_params:
+  clf__learning_rate: 0.8
+  clf__max_depth: 5
+  clf__n_estimators: 400
+  vectorizer__max_features: 500
+cv_score: f1
+model_name: catboost_pipe

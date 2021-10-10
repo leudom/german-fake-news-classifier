@@ -34,6 +34,8 @@ import nltk
 from nltk.stem.snowball import GermanStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 from custom_transformers import StemmedCountVectorizer
+import dagshub
+from joblib import dump
 
 
 load_dotenv(find_dotenv())
@@ -73,37 +75,54 @@ df_body_trans = pd.DataFrame(df_body.T.sum(axis=1), columns=['count'])
 df_body_trans.sort_values(by='count', ascending=False).head(20)
 
 """
+
 #%% Define param grid for tuning
-param_grid = {'vectorizer__max_features':[300, 500],
-        'clf__n_estimators': [300, 400],
+param_grid = {'vectorizer__max_features':[500],
+        'clf__n_estimators': [400],
         'clf__learning_rate': [0.8],
         'clf__max_depth': [5]}
 
 # Constants for training
+MODEL_NAME = 'catboost_pipe'
 CV_SCORING = 'f1'
 CV_FOLDS = 3
-# %% Pipeline
-pipe = Pipeline(steps=[
-    ('vectorizer', StemmedCountVectorizer(stop_words=STOPWORD_LIST,
+
+# %%
+with dagshub.dagshub_logger() as dagslog:
+        # Pipeline
+        pipe = Pipeline(steps=[
+        ('vectorizer', StemmedCountVectorizer(stop_words=STOPWORD_LIST,
                                    token_pattern=r'\b[a-zA-Z]{2,}\b',
                                    stemmer=GermanStemmer(ignore_stopwords=True),
                                    lowercase=True)),
-    ('clf', CatBoostClassifier())
-])
-# pipe_title_tune.get_params().keys()
-cv_grid = GridSearchCV(pipe, param_grid, scoring=CV_SCORING, cv=CV_FOLDS, n_jobs=2)
-cv_grid.fit(X_train, y_train)
-#grid_title.best_estimator_.named_steps['clf'].get_all_params()
-#%% Log and assign best score and params to var
-logger.info('Best params from GridSearchCV: %s' % str(cv_grid.best_params_))
-logger.info('Best %s from GridSearchCV: %s' % (CV_SCORING, str(cv_grid.best_score_)))
-#_best_params_title = grid_title.best_params_
-#_best_score_title = grid_title.best_score_
-# %% Predict on testdata
-y_pred = cv_grid.best_estimator_.predict(X_test)
-logger.info('f1_score for testdata: %s' % str(f1_score(y_test, y_pred)))
-logger.info('precision_score for testdata: %s' % str(precision_score(y_test, y_pred)))
-logger.info('recall_score for testdata: %s' % str(recall_score(y_test, y_pred)))
-logger.info('Classification report for testdata: \n%s' % classification_report(y_test, y_pred))
-logger.info('Confusion matrix for testdata: \n%s' % confusion_matrix(y_test, y_pred))
-#%%
+        ('clf', CatBoostClassifier())
+        ])
+        # pipe_title_tune.get_params().keys()
+        logger.info('Start training estimator pipeline')
+        cv_grid = GridSearchCV(pipe, param_grid, scoring=CV_SCORING, cv=CV_FOLDS, n_jobs=2)
+        cv_grid.fit(X_train, y_train)
+        #cv_grid.best_estimator_.named_steps['clf'].get_all_params()
+
+        # Log and assign best score and params to var
+        logger.info('Best params from GridSearchCV: %s' % str(cv_grid.best_params_))
+        dagslog.log_hyperparams({'model_name': MODEL_NAME})
+        dagslog.log_hyperparams({'cv_score': CV_SCORING})
+        dagslog.log_hyperparams({'best_cv_params': cv_grid.best_params_})
+
+        logger.info('Best %s from GridSearchCV: %s' % (CV_SCORING, str(cv_grid.best_score_)))
+        dagslog.log_metrics({'best_cv_score': cv_grid.best_score_})
+        
+        # Predict on testdata
+        y_pred = cv_grid.best_estimator_.predict(X_test)
+        logger.info('f1_score for testdata: %s' % str(f1_score(y_test, y_pred)))
+        dagslog.log_metrics({'f1_score_on_testdata': f1_score(y_test, y_pred)})
+        logger.info('precision_score for testdata: %s' % str(precision_score(y_test, y_pred)))
+        dagslog.log_metrics({'precision_score_on_testdata': precision_score(y_test, y_pred)})
+        logger.info('recall_score for testdata: %s' % str(recall_score(y_test, y_pred)))
+        dagslog.log_metrics({'recall_score_on_testdata': recall_score(y_test, y_pred)})
+        logger.info('Classification report for testdata: \n%s' % classification_report(y_test, y_pred))
+        logger.info('Confusion matrix for testdata: \n%s' % confusion_matrix(y_test, y_pred))
+
+        # Dump model to disk
+        MODEL_PATH = os.path.join('bin', 'models', MODEL_NAME+'.joblib')
+        dump(cv_grid.best_estimator_, MODEL_PATH)
