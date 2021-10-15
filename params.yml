@@ -4,4 +4,4 @@ best_cv_params:
   clf__n_estimators: 400
   vectorizer__max_features: 500
 cv_score: f1
-model_name: catboost_pipe
+model_path: bin/models/model.joblib

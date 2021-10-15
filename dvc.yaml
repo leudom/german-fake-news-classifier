@@ -21,3 +21,12 @@ stages:
     - src/data/make_dataset.py
     outs:
     - data/processed/fake_news_processed.csv
+  train-model:
+    cmd: python3 src/models/train_model.py
+    deps:
+    - data/processed/fake_news_processed.csv
+    - src/models/train_model.py
+    outs:
+    - bin/models/model.joblib
+    - metrics.csv:
+        cache: false

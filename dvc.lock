@@ -42,3 +42,19 @@ stages:
     - path: data/processed/fake_news_processed.csv
       md5: f64b274e898e5f9417abda415aa505ad
       size: 170221793
+  train-model:
+    cmd: python3 src/models/train_model.py
+    deps:
+    - path: data/processed/fake_news_processed.csv
+      md5: f64b274e898e5f9417abda415aa505ad
+      size: 170221793
+    - path: src/models/train_model.py
+      md5: 2306fb93a1c9176757edff2c2868f7c0
+      size: 5029
+    outs:
+    - path: bin/models/model.joblib
+      md5: dd5da0dd8c49f3ff7cb5ab9e2c81fa27
+      size: 3883337
+    - path: metrics.csv
+      md5: 0b2030ba9407c523f286bff4b455f4aa
+      size: 266

@@ -83,7 +83,7 @@ param_grid = {'vectorizer__max_features':[500],
         'clf__max_depth': [5]}
 
 # Constants for training
-MODEL_NAME = 'catboost_pipe'
+MODEL_PATH = os.path.join('bin', 'models', 'model.joblib')
 CV_SCORING = 'f1'
 CV_FOLDS = 3
 
@@ -105,7 +105,7 @@ with dagshub.dagshub_logger() as dagslog:
 
         # Log and assign best score and params to var
         logger.info('Best params from GridSearchCV: %s' % str(cv_grid.best_params_))
-        dagslog.log_hyperparams({'model_name': MODEL_NAME})
+        dagslog.log_hyperparams({'model_path': MODEL_PATH})
         dagslog.log_hyperparams({'cv_score': CV_SCORING})
         dagslog.log_hyperparams({'best_cv_params': cv_grid.best_params_})
 
@@ -124,5 +124,4 @@ with dagshub.dagshub_logger() as dagslog:
         logger.info('Confusion matrix for testdata: \n%s' % confusion_matrix(y_test, y_pred))
 
         # Dump model to disk
-        MODEL_PATH = os.path.join('bin', 'models', MODEL_NAME+'.joblib')
         dump(cv_grid.best_estimator_, MODEL_PATH)
