@@ -49,12 +49,12 @@ stages:
       md5: f64b274e898e5f9417abda415aa505ad
       size: 170221793
     - path: src/models/train_model.py
-      md5: 15fd71defdc07e5071e55c3702e26e3d
-      size: 5051
+      md5: a1d68c29d12cf2700f934139aa962c31
+      size: 5060
     outs:
     - path: bin/models/model.pkl
-      md5: 1c5e25bfe5261c15e98dc4dc457bf036
-      size: 3883010
+      md5: 4e55ca8f617a74e7e6f1f52f2293963f
+      size: 3883057
     - path: metrics.csv
-      md5: 755ced4064eae008a43c6c413adf3f51
+      md5: d43ea74c47951d69a6d1cbce51db3987
       size: 266

@@ -97,6 +97,7 @@ with dagshub.dagshub_logger() as dagslog:
                                    lowercase=True)),
         ('clf', CatBoostClassifier(allow_writing_files=False))
         ])
+        
         # pipe_title_tune.get_params().keys()
         logger.info('Start training estimator pipeline')
         cv_grid = GridSearchCV(pipe, param_grid, scoring=CV_SCORING, cv=CV_FOLDS, n_jobs=2)
