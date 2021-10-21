@@ -95,7 +95,7 @@ with dagshub.dagshub_logger() as dagslog:
                                    token_pattern=r'\b[a-zA-Z]{2,}\b',
                                    stemmer=GermanStemmer(ignore_stopwords=True),
                                    lowercase=True)),
-        ('clf', CatBoostClassifier())
+        ('clf', CatBoostClassifier(allow_writing_files=False))
         ])
         # pipe_title_tune.get_params().keys()
         logger.info('Start training estimator pipeline')

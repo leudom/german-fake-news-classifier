@@ -27,6 +27,6 @@ stages:
     - data/processed/fake_news_processed.csv
     - src/models/train_model.py
     outs:
-    - bin/models/model.joblib
+    - bin/models/model.pkl
     - metrics.csv:
         cache: false
