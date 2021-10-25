@@ -64,17 +64,6 @@ downloads: {}
 packages:
 - python=3.8.8
 
-- pandas
-- newspaper3k
-- scikit-learn
-- nltk
-- jupyter
-- kaggle
-- python-dotenv
-- seaborn
-- catboost
-- pip:
-  - dagshub
 #
 # In the channels section, list any Conda channel URLs to be searched
 # for packages.
@@ -84,7 +73,7 @@ packages:
 # channels:
 #    - mychannel
 #
-- dvc
+
 channels: []
 
 #
@@ -106,6 +95,29 @@ platforms:
 env_specs:
   fake_news_env:
     description: Default environment spec for running commands
-    packages: []
+    packages:
+    - pandas
+    - newspaper3k
+    - scikit-learn
+    - nltk
+    - jupyter
+    - kaggle
+    - python-dotenv
+    - seaborn
+    - catboost
+    - dvc 
+    - pip:
+      - dagshub
+      - azureml-core
     channels: []
     platforms: []
+  inference_env:
+    packages:
+    - scikit-learn
+    - pandas
+    - catboost
+    - nltk
+    - pip:
+      - azureml-core
+      - azureml-defaults
+    channels: []

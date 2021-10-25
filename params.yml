@@ -1,7 +1,7 @@
 best_cv_params:
-  clf__learning_rate: 0.8
+  clf__learning_rate: 0.9
   clf__max_depth: 5
   clf__n_estimators: 400
   vectorizer__max_features: 500
 cv_score: f1
-model_path: bin/models/model.pkl
+model_path: /Users/dominikl/Python_Projekts/german_fake_news_classifier/bin/models/model.pkl

@@ -79,11 +79,11 @@ df_body_trans.sort_values(by='count', ascending=False).head(20)
 #%% Define param grid for tuning
 param_grid = {'vectorizer__max_features':[500],
         'clf__n_estimators': [400],
-        'clf__learning_rate': [0.8],
+        'clf__learning_rate': [0.9],
         'clf__max_depth': [5]}
 
 # Constants for training
-MODEL_PATH = os.path.join('bin', 'models', 'model.pkl')
+MODEL_PATH = os.getenv('MODEL_PATH')
 CV_SCORING = 'f1'
 CV_FOLDS = 3
 

@@ -1,7 +1,15 @@
 german_fake_news_classifier
 ==============================
 
-This is a fake news classifier trained on german news/fake-news.
+This repo is about classifying german news/fake-news. The objective is to train a binary classifier that is capable of classifying news articles into fake and non-fake. This repo provides a stack for
+* Experiments and Collaboration (Dagshub - https://dagshub.com/leudom/german-fake-news-classifier)
+* Model and Data Versioning (dvc)
+* ML Pipelines (dvc)
+* Deployment of Endpoints in Azure (Azure ML)
+
+All those functionalities are provided in a template-wise manner for you in order to to kick-off your own project or - even better - contribute to this repo ;-)
+
+
 
 Project Organization
 ------------
