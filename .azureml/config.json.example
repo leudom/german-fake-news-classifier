@@ -1,0 +1,5 @@
+{
+    "subscription_id": "your_subscription_id",
+    "resource_group": "your_resource_group",
+    "workspace_name": "your_ws_name"
+}

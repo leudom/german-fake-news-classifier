@@ -14,7 +14,7 @@ import json
 import numpy as np
 from joblib import load
 from azureml.core.model import Model
-
+#%%
 from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
@@ -36,7 +36,7 @@ def run(data):
     try:
         data = json.loads(data)
         result = model.predict_proba(data['data'])
-        return {'data': result.tolist(), 'message': "Successfully classified fake news"}
+        return {'data': result.tolist(), 'message': "Successfully classified news"}
     except Exception as e:
         error = str(e)
-        return {'data': error, 'message': "Failed to classified fake news"}
+        return {'data': error, 'message': "Failed to classify news"}

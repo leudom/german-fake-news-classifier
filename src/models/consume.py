@@ -17,9 +17,23 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 # %%
-text = """ Die Nachricht ist knapp - und sie kommt überraschend: Queen Elizabeth II. werde sich auf medizinischen Rat hin die nächsten Tage ausruhen und nicht wie geplant nach Nordirland reisen, teilte der Buckingham-Palast Mittwoch mit. "Widerwillig" habe die 95-jährige Königin den Rat ihrer Ärzte angenommen - sie sei enttäuscht, ihre geplanten Termine nicht wahrnehmen zu kennen. Die Entscheidung habe nichts mit Corona zu tun, hieß es laut der Nachrichtenagentur PA aus Palastkreisen.
+text = """Die Liste türkiser Persönlichkeiten, die in Korruptionsermittlungen beschuldigt werden, ist lang: Da wären Altkanzler Sebastian Kurz, seine Berater Gerald Fleischmann und Stefan Steiner; Finanzminister Gernot Blümel, seine Vorgänger Hartwig Löger und Josef Pröll; Kabinettschefs wie Bernhard Bonelli und Clemens-Wolfgang Niedrist; Ex-Vizeparteiobfrau Bettina Glatz-Kremsner, der frühere Öbag-Chef Thomas Schmid und die Abgeordnete Michaela Steinacker – für alle Genannten gilt die Unschuldsvermutung. Auch die ÖVP selbst ist Beschuldigte gemäß Verbandsverantwortlichkeitsgesetz.
 
-Die Nachricht kam an einem Tag, an dem die Queen verschiedenste Titelseiten damit zierte, wie sie ungewohnt keck ihre Gesundheit betont. Mit einer unkonventionellen Antwort schlug die Königin die "Oldie of the Year"-Auszeichnung aus, die ihr das Seniorenmagazin The Oldie verleihen wollte. "Ihre Majestät glaubt, man ist so alt, wie man sich fühlt", schrieb der Privatsekretär der 95-Jährigen, Tom Laing-Baker, in einer schriftlichen Absage, die in der November-Ausgabe der Zeitschrift veröffentlicht wurde. "Daher ist die Queen der Meinung, dass sie nicht die relevanten Kriterien erfüllt, um die Auszeichnung zu akzeptieren, und hofft, dass sich ein geeigneterer Kandidat findet." Die Zeitschrift feierte die Antwort als "höflichste Absage der Geschichte", der britische Boulevard jubelte. Die Monarchin, so schien es, wollte ihrem Volk versichern, dass es sich keine Sorgen machen müsse. Doch diese dürften nun umso stärker werden."""
+
+
+EUROPAS ZUKUNFT
+
+In die Zukunft Europas reinhören
+Das Verbindungsbüro des Europäischen Parlaments in Österreich informiert in einem Podcast über zukunftsweisende Themen und aktuelle Debatten. ''Thema Zukunft Europa'' erscheint vierteljährlich und lässt Abgeordnete, Experten und Bürger zu Wort kommen.
+
+WERBUNG
+Als Verteidigungsstrategie gegen die Ermittlungen der Wirtschafts- und Korruptionsstaatsanwaltschaft (WKStA) versuchen Türkise, immer wieder Nadelstiche zu setzen, um das Vertrauen in die Arbeit der Behörden zu unterminieren. Das erfolgt teils durch diskussionswürdige Kritik, teils durch Unwahrheiten. Dieses Wochenende war es wieder so weit: Aufgewärmt wurde eine alte Geschichte, die sich mit dem Privatleben des fallführenden Staatsanwalts Gregor Adamovic beschäftigt. Die ÖVP stößt sich daran, dass dieser mit jener Wirtschaftsexpertin liiert ist, die für die WKStA Chats aus sichergestellten Smartphones auswertet.
+
+"Fragwürdige Vorgänge"
+Der ÖVP-Abgeordnete Wolfgang Gerstl, einst Fraktionsführer im Ibiza-Ausschuss, sieht hier "fragwürdige Vorgänge", weil angeblich Compliance-Regeln in der Justiz verletzt würden. In den Richtlinien dazu heißt es, dass sich Justizbedienstete nicht von "familiären" oder "emotionalen" Interessen leiten lassen dürfen. Damit ist freilich etwas anderes gemeint: zum Beispiel, dass ein Staatsanwalt nicht mit Beschuldigten oder Opfern in seinem Verfahren befreundet sein sollte.
+
+
+Um in der Beziehung zwischen beigezogener Expertin und fallführendem Staatsanwalt einen Verstoß gegen die Compliance-Richtlinie zu sehen, müsste zweierlei zutreffen: erstens, dass der Staatsanwalt gegen die ÖVP voreingenommen ist und deshalb belastende Inhalte sucht. Zweitens, dass die Wirtschaftsexpertin die Auswahl der Chats manipuliert, um ihrem Partner dabei zu helfen. Die Angelegenheit wurde nach einer anonymen Anzeige, die offenbar aus ÖVP-affinen Justizkreisen stammte, bereits geprüft – und die Zusammenarbeit für unbedenklich erklärt. Abgesehen davon arbeiten an der Causa weit mehr Personen mit: Für die Chatauswertung ist prinzipiell Oberstaatsanwalt Matthias Purkart verantwortlich; geprüft werden die Ergebnisse dann noch von Gruppenleiter und WKStA-Spitze."""
 
 # %%
 endpoint_url = 'http://698e25a3-0344-4883-8b19-d67fa4aeb89f.westeurope.azurecontainer.io/score'
