@@ -2,6 +2,8 @@ german_fake_news_classifier
 ==============================
 
 ## Overview
+> **This repo was fully migrated to https://dagshub.com/leudom/german-fake-news-classifier. Further development will take place there!**
+
 This repo is about classifying german news/fake-news. The objective is to train a binary classifier that is capable of classifying news articles into fake and non-fake. This repo provides a stack for
 * Experiments and Collaboration (Dagshub - https://dagshub.com/leudom/german-fake-news-classifier)
 * Model and Data Versioning (dvc)
